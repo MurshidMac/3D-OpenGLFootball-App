@@ -4,160 +4,41 @@
 #include <Windows.h>
 #include <iostream>
 #include <math.h>
+#include <string>
+#include <cmath>
+#define _USE_MATH_DEFINES
+
 
 using namespace std;
 double distanceBall = 4.0;
 double yAxis = -0.55;
 double xAxis = 0.00;
 double balldistance = 0.00;
+double hozSliderX = 60;
+double vertSliderY = 720 - 60.0;
 int values = 10;
 double i = 4.00;
 int test = 10;
+int tries = 10; //stores the number of remaining tries
+int hoops = 8; //stores the number of hoops left to hit
 static float ballRotation = 0.0;
+int intialPoints = 0;
 
-GLfloat targetOne[] = { 0.0,0.5,-9.8 };
-GLfloat targetTwo[] = { -2.0, 0.0, -9.8 };
-GLfloat targetThree[] = { 3.0, 1.0, -9.8 };
-GLfloat targetFour[] = { -3.2, 1.0, -9.8 };
-GLfloat targetFive[] = { 1.8, 0.0, -9.8 };
-GLfloat targetSix[] = { 1.8, 0.0, -9.8 };
-GLfloat targetSeven[] = { 1.8, 0.0, -9.8 };
-GLfloat targetEight[] = { 1.8, 0.0, -9.8 };
+GLfloat targetOne[] = { -0.5,-0.3,-9.8 };	// Targets On the wall	20	
+GLfloat targetTwo[] = { -3.2, 0.7, -9.8 };	// X, Y, Z				10
+GLfloat targetThree[] = { 0.9, 1.0, -9.8 };	//						20
+GLfloat targetFour[] = { -1.2, 1.0, -9.8 };	//						30
+GLfloat targetFive[] = { 1.8, 0.0, -9.8 };	//						10
+GLfloat targetSix[] = { -3.2, -0.5, -9.8 };	//						30
+GLfloat targetSeven[] = { 3.2, 0.0, -9.8 }; //						30
+GLfloat targetEight[] = { 2.7, 1.0, -9.8 };	// Targets End			30	
+
+GLfloat boXRotate = 0.0;
 
 GLbyte *textureOne; 
 GLbyte *textureTwo; 
 GLbyte *textureThree; 
-GLfloat cubeMapVertex[108] =
-{
 
-	0.5f, -0.5f, -0.5f,
-	0.5f, 0.5f, -0.5f,
-	0.5f, -0.5f, 0.5f,
-	0.5f, -0.5f, 0.5f,
-	0.5f, 0.5f, -0.5f,
-	0.5f, 0.5f, 0.5f,
-
-	0.5f, 0.5f, -0.5f,
-	-0.5f, 0.5f, -0.5f,
-	0.5f, 0.5f, 0.5f,
-	0.5f, 0.5f, 0.5f,
-	-0.5f, 0.5f, -0.5f,
-	-0.5f, 0.5f, 0.5f,
-
-	-0.5f, 0.5f, -0.5f,
-	-0.5f, -0.5f, -0.5f,
-	-0.5f, 0.5f, 0.5f,
-	-0.5f, 0.5f, 0.5f,
-	-0.5f, -0.5f, -0.5f,
-	-0.5f, -0.5f, 0.5f,
-	
-	-0.5f, -0.5f, -0.5f,
-	0.5f, -0.5f, -0.5f,
-	-0.5f, -0.5f, 0.5f,
-	-0.5f, -0.5f, 0.5f,
-	0.5f, -0.5f, -0.5f,
-	0.5f, -0.5f, 0.5f,
-	
-	0.5f, 0.5f, 0.5f,
-	-0.5f, 0.5f, 0.5f,
-	0.5f, -0.5f, 0.5f,
-	0.5f, -0.5f, 0.5f,
-	-0.5f, 0.5f, 0.5f,
-	-0.5f, -0.5f, 0.5f,
-	
-	0.5f, -0.5f, -0.5f,
-	-0.5f, -0.5f, -0.5f,
-	0.5f, 0.5f, -0.5f,
-	0.5f, 0.5f, -0.5f,
-	-0.5f, -0.5f, -0.5f,
-	-0.5f, 0.5f, -0.5f
-
-};
-
-GLfloat cubeMapSkybox[72] = {
-	0.75,0.33,  
-	0.75,0.67,  
-	0.5,0.33,  
-	0.5,0.33,  
-	0.75,0.67, 
-	0.5,0.67,  
-	0.5,1.0, 
-	0.25,1, 
-	0.5,0.67,
-	0.5,0.67,
-	0.25,1.0,
-	0.25,0.67, 
-    0,0.67,
-    0,0.33,
-	0.25,0.67,
-	0.25,0.67,
-	0,0.33,
-	0.25,0.33,
-	0.25,0.0,
-	0.5,0.0,
-	0.25,0.33,
-	0.25,0.33,
-    0.5,0.0,
-	0.5,0.33,
-	0.5,0.67,
-	0.25,0.67,
-	0.5,0.33,
-	0.5,0.33,
-	0.25,0.67,
-	0.25,0.33,
-	0.75,0.33,
-	1.0,0.33,
-	0.75,0.67,
-	0.75,0.67,
-	1.0,0.33,
-	1.0,0.67
-};
-
-GLfloat cubeMapNormals[108] =
-{
-	1.0f, 0.0f, 0.0f,
-	1.0f, 0.0f, 0.0f,
-	1.0f, 0.0f, 0.0f,
-	1.0f, 0.0f, 0.0f,
-	1.0f, 0.0f, 0.0f,
-	1.0f, 0.0f, 0.0f,
-
-	0.0f, 1.0f, 0.0f,
-	0.0f, 1.0f, 0.0f,
-	0.0f, 1.0f, 0.0f,
-	0.0f, 1.0f, 0.0f,
-	0.0f, 1.0f, 0.0f,
-	0.0f, 1.0f, 0.0f,
-
-	-1.0f, 0.0f, 0.0f,
-	-1.0f, 0.0f, 0.0f,
-	-1.0f, 0.0f, 0.0f,
-	-1.0f, 0.0f, 0.0f,
-	-1.0f, 0.0f, 0.0f,
-	-1.0f, 0.0f, 0.0f,
-
-	0.0f, -1.0f, 0.0f,
-	0.0f, -1.0f, 0.0f,
-	0.0f, -1.0f, 0.0f,
-	0.0f, -1.0f, 0.0f,
-	0.0f, -1.0f, 0.0f,
-	0.0f, -1.0f, 0.0f,
-
-	0.0f, 0.0f, 1.0f,
-	0.0f, 0.0f, 1.0f,
-	0.0f, 0.0f, 1.0f,
-	0.0f, 0.0f, 1.0f,
-	0.0f, 0.0f, 1.0f,
-	0.0f, 0.0f, 1.0f,
-
-	0.0f, 0.0f, -1.0f,
-	0.0f, 0.0f, -1.0f,
-	0.0f, 0.0f, -1.0f,
-	0.0f, 0.0f, -1.0f,
-	0.0f, 0.0f, -1.0f,
-	0.0f, 0.0f, -1.0f
-
-};
 
 // Lights
 GLfloat  light[] = { 10.0f, 10.0f, 10.0f, 1.0f };
@@ -172,6 +53,9 @@ GLint cordinateWidth, cordinateHeight, cordinateCo;
 GLenum textureFormat;
 bool lightVisible = false;
 bool lightRotate = false;
+
+// prededfined Funtions
+
 // Import From pragma pack 
 #pragma pack(1)
 typedef struct
@@ -250,7 +134,7 @@ GLbyte *gltLoadTGA(const char *szFileName, GLint *cordinateWidth, GLint *cordina
 	fclose(pFile);
 	return pBits;
 }
-
+// Reshape Funtions of Objects 
 void reshape(int w, int h)
 {
 	glViewport(0, 0, w, h);
@@ -288,11 +172,7 @@ void resetPerspectiveProjection() {
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
 }
-
-void sixFaceSkybox() {
-
-}
-
+// Pure Lighting
 void backgroundSettle()
 {
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -316,7 +196,7 @@ void backgroundSettle()
 
 }
 
-//Football Properties
+//ball Properties
 void ball() {
 
 	GLbyte *pBytes5;
@@ -325,7 +205,7 @@ void ball() {
 	free(pBytes5);
 	glEnable(GL_TEXTURE_2D);
 
-
+	//Calculating the 3D Vector
 	glTranslated(xAxis, yAxis, -distanceBall);
 	GLUquadricObj *quadric;
 	quadric = gluNewQuadric();
@@ -334,7 +214,8 @@ void ball() {
 	gluQuadricOrientation(quadric, GLU_OUTSIDE);
 	//enable the texturing
 	gluQuadricTexture(quadric, GL_TRUE);
-	gluSphere(quadric, 0.35f, 50, 35);
+	// Ball Drawn Using the GluSphere
+	gluSphere(quadric, 0.20f, 20, 10);
 
 }
 
@@ -356,7 +237,7 @@ void pointsTen() {
 
 	//enable the texturing
 	gluQuadricTexture(quadric, GL_TRUE);
-	gluDisk(quadric, 0.5, 0.6, 32, 32);
+	gluDisk(quadric, 0.0, 0.6, 32, 32);
 	glDisable(GL_BLEND);
 }
 
@@ -379,7 +260,7 @@ void pointsTwenty() {
 	gluQuadricOrientation(quadric, GLU_OUTSIDE);
 
 	gluQuadricTexture(quadric, GL_TRUE);
-	gluDisk(quadric, 0.4, 0.5, 32, 32);
+	gluDisk(quadric, 0.0, 0.5, 32, 32);
 	glDisable(GL_BLEND);
 }
 
@@ -401,14 +282,201 @@ void pointsThirty() {
 	gluQuadricOrientation(quadric, GLU_OUTSIDE);
 
 	gluQuadricTexture(quadric, GL_TRUE);
-	gluDisk(quadric, 0.3, 0.4, 32, 32);
+	gluDisk(quadric, 0.0, 0.4, 32, 32);
 	glDisable(GL_BLEND);
 }
 
-void backgroundWalls() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//Horizontal And Vertical Bars
+void bars() {
+	glEnable(GL_TEXTURE_2D);
+	GLbyte *pBytes3;
+	pBytes3 = gltLoadTGA("Textures/fillBarHorizontal.tga", &cordinateWidth, &cordinateHeight, &cordinateCo, &textureFormat);
+	glTexImage2D(GL_TEXTURE_2D, 0, cordinateCo, cordinateWidth, cordinateHeight, 0, textureFormat, GL_UNSIGNED_BYTE, pBytes3);
+	free(pBytes3);
+	
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0, 2.0);
+	glVertex2d(30.0, 40.0);
+	glTexCoord2f(2.0, 2.0);
+	glVertex2d(120.0, 40.0);
+	glTexCoord2f(2.0, 0.0);
+	glVertex2d(120.0, 80.0);
+	glTexCoord2f(0.0, 0.0);
+	glVertex2d(30.0, 80.0);
+	glEnd();
 
+	GLbyte *pBytes4;
+	pBytes4 = gltLoadTGA("Textures/fillBarVerticalR.tga", &cordinateWidth, &cordinateHeight, &cordinateCo, &textureFormat);
+	glTexImage2D(GL_TEXTURE_2D, 0, cordinateCo, cordinateWidth, cordinateHeight, 0, textureFormat, GL_UNSIGNED_BYTE, pBytes4);
+	free(pBytes4);
+
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0, 2.0);
+	glVertex2d(550, 600);
+	glTexCoord2f(0.0, 0.0);
+	glVertex2d(550, 800);
+	glTexCoord2f(2.0, 0.0);
+	glVertex2d(580, 800);
+	glTexCoord2f(2.0, 2.0);
+	glVertex2d(580, 600);
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
+}
+
+
+void drawOrtho() {
+	/*glColor3f(1.0, 1.0, 1.0);
+
+	drawSliderX();
+	drawSliderY();
+
+	glColor3f(1.0, 1.0, 0);
+	glRectd(hozSliderX, 30.0, hozSliderX + 30.0, 50.0);
+	glRectd(Wwidth - 30.0, vertSliderY, Wwidth - 50.0, vertSliderY + 30.0);
+	glColor3f(1.0, 1.0, 1.0);
+	glRasterPos2d(Wwidth - 120.0, 50.0);
+	string scoreStr;
+	if ((tries == 0) || (hoops = 0)) {
+		scoreStr = "Game Over!";
+	}
+	else {
+		scoreStr = "Score: " + to_string(score);
+	}
+	const unsigned char* scoref = reinterpret_cast
+		<const unsigned char*>(scoreStr.c_str());
+	glutBitmapString(GLUT_BITMAP_HELVETICA_18, scoref);
+	glPopMatrix();*/
+}
+
+//reusable function to draw flower-type scenery
+void drawFlowers(char* imagePath, int num, float x) {//accepts texture (orange or
+													 //yellow flowers), number of flowers
+													 //needed, and the x position of the
+													 //first flower
+	GLfloat y1 = 0;  GLfloat y2 = 0; GLfloat z = 0;
+	if (imagePath == "textures/orangeFlowerFinal5.tga") {
+		y1 = -13.0;		//set height of the flowers
+		y2 = -5.0;
+		z = -54.8;		//and z-value of the flowers
+	}
+	if (imagePath == "textures/yellowFlowerFinal.tga") {
+		y1 = -13.2;
+		y2 = -7.0;
+		z = -54.7;
+	}
+	glPushMatrix();
+	glEnable(GL_BLEND);	//enable blending to make transparent texture
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	GLbyte *pBytes0;
+	pBytes0 = gltLoadTGA(imagePath, &cordinateWidth, &cordinateHeight, &cordinateCo, &textureFormat);
+	glTexImage2D(GL_TEXTURE_2D, 0, cordinateCo, cordinateWidth, cordinateHeight, 0, textureFormat, GL_UNSIGNED_BYTE, pBytes0);
+	free(pBytes0);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glBegin(GL_QUADS);
+
+	//set up vertexes and texture coords
+	glTexCoord2f(1.0*num, 0.05);
+	glVertex3f(x, y1, z);
+	glTexCoord2f(0.0, 0.05);
+	glVertex3f(x + (6.0*num), y1, z);
+	glTexCoord2f(0.0, 1.0);
+	glVertex3f(x + (6.0*num), y2, z);
+	glTexCoord2f(1.0*num, 1.0);
+	glVertex3f(x, y2, z);
+
+	glEnd();
+
+	glDisable(GL_BLEND);
+	glPopMatrix();
+}
+
+
+void sixFaceSkybox() {
+	GLbyte *pBytes9;
+	pBytes9 = gltLoadTGA("textures/stormydays_large.tga", &cordinateWidth, &cordinateHeight, &cordinateCo, &textureFormat);
+	glTexImage2D(GL_TEXTURE_2D, 0, cordinateCo, cordinateWidth, cordinateHeight, 0, textureFormat, GL_UNSIGNED_BYTE, pBytes9);
+	free(pBytes9);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+
+	int vertexZ = 4;
+	glFrontFace(GL_CW);
+	glRotatef(boXRotate, 0.0f, 1.0f, 0.0f);
+
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.5, (2.0 / 3.0));
+	glVertex3f(40.0f * 2, 20.0f * 2, -55.0f * vertexZ);
+	glTexCoord2f(0.25, (2.0 / 3.0));
+	glVertex3f(-40.0f * 2, 20.0f * 2, -55.0f * vertexZ);
+	glTexCoord2f(0.25, 1.0);
+	glVertex3f(-40.0f * 2, 20.0f * 2, 20.0f * vertexZ);
+	glTexCoord2f(0.5, 1.0);
+	glVertex3f(40.0f * 2, 20.0f * 2, 20.0f * vertexZ);
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.5, (2.0 / 3.0));
+	glVertex3f(40.0f * 2, 20.0f * 2, -55.0f * vertexZ);
+	glTexCoord2f(0.25, (2.0 / 3.0));
+	glVertex3f(-40.0f * 2, 20.0f * 2, -55.0f * vertexZ);
+	glTexCoord2f(0.25, (1.0 / 3.0));
+	glVertex3f(-40.0f * 2, -13.0f * 2, -55.0f * vertexZ);
+	glTexCoord2f(0.5, (1.0 / 3.0));
+	glVertex3f(40.0f * 2, -13.0f * 2, -55.0f * vertexZ);
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.5, (2.0 / 3.0));
+	glVertex3f(40.0f * 2, 20.0f * 2, -55.0f * vertexZ);
+	glTexCoord2f(0.75, (2.0 / 3.0));
+	glVertex3f(40.0f * 2, 20.0f * 2, 20.0f * vertexZ);
+	glTexCoord2f(0.75, (1.0 / 3.0));
+	glVertex3f(40.0f * 2, -13.0f * 2, 20.0f * vertexZ);
+	glTexCoord2f(0.5, (1.0 / 3.0));
+	glVertex3f(40.0f * 2, -13.0f * 2, -55.0f * vertexZ);
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.25, (2.0 / 3.0));
+	glVertex3f(-40.0f * 2, 20.0f * 2, -55.0f * vertexZ);
+	glTexCoord2f(0.0, (2.0 / 3.0));
+	glVertex3f(-40.0f * 2, 20.0f * 2, 20.0f * vertexZ);
+	glTexCoord2f(0.0, (1.0 / 3.0));
+	glVertex3f(-40.0f * 2, -13.0f * 2, 20.0f * vertexZ);
+	glTexCoord2f(0.25, (1.0 / 3.0));
+	glVertex3f(-40.0f * 2, -13.0f * 2, -55.0f * vertexZ);
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.75, (2.0 / 3.0));
+	glVertex3f(40.0f * 2, 20.0f * 2, 20.0f * vertexZ);
+	glTexCoord2f(1.0, (2.0 / 3.0));
+	glVertex3f(-40.0f * 2, 20.0f * 2, 20.0f * vertexZ);
+	glTexCoord2f(1.0, (1.0 / 3.0));
+	glVertex3f(-40.0f * 2, -13.0f * 2, 20.0f * vertexZ);
+	glTexCoord2f(0.75, (1.0 / 3.0));
+	glVertex3f(40.0f * 2, -13.0f * 2, 20.0f * vertexZ);
+	glEnd();
+
+	glFrontFace(GL_CCW);
+}
+
+
+void backgroundWalls() {
+
+	glPushMatrix();
 	GLbyte *pBytes2;
+	//Photoshoped Bricked Flower Wall
 	pBytes2 = gltLoadTGA("Textures/brick_texture_Flowers.tga", &cordinateWidth, &cordinateHeight, &cordinateCo, &textureFormat);
 	glTexImage2D(GL_TEXTURE_2D, 0, cordinateCo, cordinateWidth, cordinateHeight, 0, textureFormat, GL_UNSIGNED_BYTE, pBytes2);
 	free(pBytes2);
@@ -417,16 +485,18 @@ void backgroundWalls() {
 
 	glBegin(GL_QUADS);
 	glTexCoord2f(0.0, 0.0);
-	glVertex3f(-4.0f, -1.0f, -10.0f);
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(-4.0f, 1.5f, -10.0f);
-	glTexCoord2f(1.0f, 1.0f);
-	glVertex3f(4.0f, 1.5f, -10.0f);
-	glTexCoord2f(1.0f, 0.0f);
-	glVertex3f(4.0f, -1.0f, -10.0f);
+	glVertex3f(-6.0f, -3.0f, -10.0f);
+	glTexCoord2f(0.0f, 3.0f);
+	glVertex3f(-6.0f, 4.0f, -10.0f);
+	glTexCoord2f(3.0f, 3.0f);
+	glVertex3f(6.0f, 4.0f, -10.0f);
+	glTexCoord2f(3.0f, 0.0f);
+	glVertex3f(6.0f, -3.0f, -10.0f);
 	glEnd();
 	
+
 	GLbyte *pBytes;
+	// Photoshoped Bricked Flower
 	pBytes = gltLoadTGA("Textures/brick_texture_lo_res.tga", &cordinateWidth, &cordinateHeight, &cordinateCo, &textureFormat);
 	glTexImage2D(GL_TEXTURE_2D, 0, cordinateCo, cordinateWidth, cordinateHeight, 0, textureFormat, GL_UNSIGNED_BYTE, pBytes);
 	free(pBytes);
@@ -434,23 +504,24 @@ void backgroundWalls() {
 
 	glBegin(GL_QUADS);
 	glTexCoord2f(0.0, 0.0);
-	glVertex3f(-4.0f, -1.0f, 0.0f);
-	glTexCoord2f(0.0, 1.0);
-	glVertex3f(-4.0f, 1.5f, 0.0f);
-	glTexCoord2f(1.0, 1.0);
-	glVertex3f(-4.0f, 1.5f, -10.0f);
-	glTexCoord2f(1.0, 0.0);
-	glVertex3f(-4.0f, -1.0f, -10.0f);
+	glVertex3f(-6.0f, -3.0f, 0.0f);
+	glTexCoord2f(0.0, 2.0);
+	glVertex3f(-6.0f, 4.0f, 0.0f);
+	glTexCoord2f(2.0, 2.0);
+	glVertex3f(-6.0f, 4.0f, -10.0f);
+	glTexCoord2f(2.0, 0.0);
+	glVertex3f(-6.0f, -3.0f, -10.0f);
 
-	glTexCoord2f(1.0, 0.0);
-	glVertex3f(4.0f, -1.0f, 0.0f);
-	glTexCoord2f(1.0, 1.0);
-	glVertex3f(4.0f, 1.5f, 0.0f);
-	glTexCoord2f(0.0, 1.0);
-	glVertex3f(4.0f, 1.5f, -10.0f);
+	glTexCoord2f(2.0, 0.0);
+	glVertex3f(6.0f, -3.0f, 0.0f);
+	glTexCoord2f(2.0, 2.0);
+	glVertex3f(6.0f, 4.0f, 0.0f);
+	glTexCoord2f(0.0, 2.0);
+	glVertex3f(6.0f, 4.0f, -10.0f);
 	glTexCoord2f(0.0, 0.0);
-	glVertex3f(4.0f, -1.0f, -10.0f);
+	glVertex3f(6.0f, -3.0f, -10.0f);
 	glEnd();
+
 
 	GLbyte *pBytes1;
 	pBytes1 = gltLoadTGA("Textures/ground_grass_.tga", &cordinateWidth, &cordinateHeight, &cordinateCo, &textureFormat);
@@ -459,42 +530,96 @@ void backgroundWalls() {
 	glEnable(GL_TEXTURE_2D);
 	glBegin(GL_QUADS);
 	glTexCoord2f(0.0, 0.0);
-	glVertex3f(-4.0f, -1.0f, 0.0f);
-	glTexCoord2f(1.0f, 0.0f);
-	glVertex3f(4.0f, -1.0f, 0.0f);
-	glTexCoord2f(1.0f, 1.0f);
-	glVertex3f(4.0f, -1.0f, -10.0f);
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(-4.0f, -1.0f, -10.0f);
+	glVertex3f(-6.0f, -1.0f, 0.0f);
+	glTexCoord2f(2.0f, 0.0f);
+	glVertex3f(6.0f, -1.0f, 0.0f);
+	glTexCoord2f(2.0f, 2.0f);
+	glVertex3f(6.0f, -1.0f, -10.0f);
+	glTexCoord2f(0.0f, 2.0f);
+	glVertex3f(-6.0f, -1.0f, -10.0f);
 	glEnd();
 
+	// Target One
 	glPushMatrix();
 	glTranslatef(targetOne[0], targetOne[1], targetOne[2]);
-	pointsTwenty();
+	pointsTwenty();		//20	
 	glPopMatrix();
-
+	// Target Two
 	glPushMatrix();
 	glTranslatef(targetTwo[0], targetTwo[1], targetTwo[2]);
-	pointsTen();
+	pointsTen();		//10
 	glPopMatrix();
-
+	// Target Three
 	glPushMatrix();
 	glTranslatef(targetThree[0], targetThree[1], targetThree[2]);
-	pointsTwenty();
+	pointsTwenty();		//20
 	glPopMatrix();
-
+	// Target Four
 	glPushMatrix();
 	glTranslatef(targetFour[0], targetFour[1], targetFour[2]);
-	pointsThirty();
+	pointsThirty();		//30	
+	glPopMatrix();
+	// Target Five
+	glPushMatrix();
+	glTranslatef(targetFive[0], targetFive[1], targetFive[2]);
+	pointsTen();		//10
+	glPopMatrix();
+
+	// Target Six
+	glPushMatrix();
+	glTranslatef(targetSix[0], targetSix[1], targetSix[2]);
+	pointsThirty();		//30
+	glPopMatrix();
+
+	// Target Seven
+	glPushMatrix();
+	glTranslatef(targetSeven[0], targetSeven[1], targetSeven[2]);
+	pointsThirty();		//30
+	glPopMatrix();
+
+	// Target Eight
+	glPushMatrix();
+	glTranslatef(targetEight[0], targetEight[1], targetEight[2]);
+	pointsThirty();		// 30 
+	glPopMatrix();
+
+	glTranslated(-xAxis, -yAxis, distanceBall);
+
+}
+
+
+// Entire display Scenary
+void RenderScene(void) {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// Wall Construction
+	glPushMatrix();
+	backgroundWalls();
 	glPopMatrix();
 
 	glPushMatrix();
-	glTranslatef(targetFive[0], targetFive[1], targetFive[2]);
-	pointsTen();
+	sixFaceSkybox();
 	glPopMatrix();
+
+	// Drawing the Cube Map
+
+	drawFlowers("textures/yellowFlowerFinal.tga", 4, -50.0f);
+
+	// Drawing the Mapp
+	glPushMatrix();
 	ball();
-	glTranslated(-xAxis, -yAxis, distanceBall);
+	glPopMatrix();
+
+	glPushMatrix();
+	glLoadIdentity();
+	setOrthographicProjection();
+	// Call the scores in between here to change
+
+	resetPerspectiveProjection();
+	glEnable(GL_LIGHTING);
+	glutSwapBuffers();
 }
+
 
 void scoreDisplay(int x, int y, char *string) {
 	glRasterPos2f(x, y);
@@ -505,62 +630,23 @@ void scoreDisplay(int x, int y, char *string) {
 	}
 };
 
-void RenderScene(void) {
-
-	backgroundWalls();
-	glPushMatrix();
-	glLoadIdentity();
-	setOrthographicProjection();
+void changingScore() {
 	glDisable(GL_LIGHTING);
-	GLbyte *pBytes3;
-	pBytes3 = gltLoadTGA("Textures/fillBarHorizontal.tga", &cordinateWidth, &cordinateHeight, &cordinateCo, &textureFormat);
-	glTexImage2D(GL_TEXTURE_2D, 0, cordinateCo, cordinateWidth, cordinateHeight, 0, textureFormat, GL_UNSIGNED_BYTE, pBytes3);
-	free(pBytes3);
-	glEnable(GL_TEXTURE_2D);
-
-
-	glBegin(GL_QUADS);
-	glTexCoord2f(0.0, 1.0);
-	glVertex2d(30.0, 40.0);
-	glTexCoord2f(1.0, 1.0);
-	glVertex2d(120.0, 40.0);
-	glTexCoord2f(1.0, 0.0);
-	glVertex2d(120.0, 80.0);
-	glTexCoord2f(0.0, 0.0);
-	glVertex2d(30.0, 80.0);
-	glEnd();
-
-	GLbyte *pBytes4;
-	pBytes4 = gltLoadTGA("Textures/fillBarVerticalR.tga", &cordinateWidth, &cordinateHeight, &cordinateCo, &textureFormat);
-	glTexImage2D(GL_TEXTURE_2D, 0, cordinateCo, cordinateWidth, cordinateHeight, 0, textureFormat, GL_UNSIGNED_BYTE, pBytes4);
-	free(pBytes4);
-	glBegin(GL_QUADS);
-	glTexCoord2f(0.0, 1.0);
-	glVertex2d(550, 600);
-	glTexCoord2f(0.0, 0.0);
-	glVertex2d(550, 800);
-	glTexCoord2f(1.0, 0.0);
-	glVertex2d(580, 800);
-
-	glTexCoord2f(1.0, 1.0);
-	glVertex2d(580, 600);
-	glEnd();
-
-
 	char str[10] = { 0 };
-	_itoa_s(values, str, 10);
+	for (int i = 0; i < 10;i=i+1) {
+		_itoa_s(values, str, str[i]);
+	}
 	scoreDisplay(510, 40, "Score: ");
 	scoreDisplay(560, 40, str);
-	
+
 	if (test <1) {
 		scoreDisplay(220, 250, "Press R to reset");
 	}
 
 	glPopMatrix();
-	resetPerspectiveProjection();
-	glEnable(GL_LIGHTING);
-	glutSwapBuffers();
 }
+
+
 
 void collisionDetection() {
 
@@ -609,7 +695,6 @@ void SpecialKeys(int key, int x, int y) {
 			}
 			else {
 				balldistance = balldistance + 0.1;
-
 			}
 		}
 
@@ -645,6 +730,43 @@ void SpecialKeys(int key, int x, int y) {
 		glutPostRedisplay();
 	}
 }
+
+void timer(int value)
+{
+	/*
+	if (kick) {		//if the ball has been kicked
+		t += 0.01;	//time the motion
+		r = s*t;	//calculate r for the given equation
+		vectorX = r*sin(theta)*cos(phi); //calculate the X-position
+										 //from the given eqn. (Reversed because x is the up vector)
+		vectorY = r*sin(phi)*cos(theta); //calculate the Y-position
+										 //from the given eqn.
+		if (vectorY < 0.0f)
+			vectorY = -vectorY;
+		vectorZ = -r*cos(theta);//calculate the Z-position
+								//from the given eqn. (Reversed because x is the up vector and not z)
+		angle -= 20.0;		//increment the rotation of the ball
+		if (vectorZ < -83) {
+			checkScore(vectorX, vectorY - 11.0); //check the score
+			vectorZ = 0;					   //reset variables
+			vectorX = 0;
+			vectorY = 0;
+			kick = false;
+			t = 0;
+			angle = 0.0;
+			tries -= 1;						   //update the tries taken
+			followcam = false;				   //reset the following camera
+		}
+	}
+	*/
+	boXRotate += 0.1;		//rotate the skyBox slowly
+	if (boXRotate > 360) {	//restart the rotation if the box comes full circle.
+		boXRotate = 0.1;
+	}
+	glutPostRedisplay();	//redisplay the screen
+	glutTimerFunc(10, timer, 1);
+}
+
 
 void keyInput(unsigned char key, int x, int y) {
 	if (test > 0) {
@@ -687,6 +809,8 @@ void keyInput(unsigned char key, int x, int y) {
 
 }
 
+
+
 int main(int argc, char* argv[]) {
 
 	glutInit(&argc, argv);
@@ -698,7 +822,7 @@ int main(int argc, char* argv[]) {
 	glutDisplayFunc(RenderScene);
 	glutSpecialFunc(SpecialKeys);
 	glutKeyboardFunc(keyInput);
-	//glutTimerFunc(60, rotator, 1);
+	glutTimerFunc(10, timer, 1);		
 
 	glutMainLoop();
 	return 0;

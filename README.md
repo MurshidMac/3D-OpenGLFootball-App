@@ -1,5 +1,5 @@
 # 3D-OpenGLFootball-App
-I have to created a simple football game using the perspective view.
+I have created a simple 3D football game using the perspective view with the help of a free non-proprietory OpenGL Library called [Freeglut](http://freeglut.sourceforge.net/docs/install.php), it has similar function calls and many features to that of OpenGL.
 The game takes place in a walled garden (see figure 1). The first task is to set up the static scene. 
 This consists of three textured 2 planes (for the walls), a plane for the grass surface, 
 a ball (a gluSphere), a skybox backdrop, which is a textured cube as shown in figure

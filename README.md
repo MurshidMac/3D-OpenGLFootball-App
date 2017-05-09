@@ -7,7 +7,13 @@ a ball (a gluSphere), a skybox backdrop, which is a textured cube as shown in fi
 The second task is to implement the real-time graphics and user interaction.
 The user controls the game with the arrow keys.
 aim the ball left aim the ball right aim the ball up aim the ball down Z or spacebar key – shoot the ball to the back wall.
-![Figure 1](https://drive.google.com/open?id=0B7qZTw4UObyPeTVYV1RHTnBJRzA)
+    ![Figure 1](https://github.com/MurshidMac/3D-OpenGLFootball-App/blob/master/Final%20Image.PNG)
+Initial Game enviroment.
+
+![Image 2](https://github.com/MurshidMac/3D-OpenGLFootball-App/blob/master/Second%20screen%20shot.PNG)
+Targetting from top camera 
+
+
 
 
 

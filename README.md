@@ -7,3 +7,7 @@ a ball (a gluSphere), a skybox backdrop, which is a textured cube as shown in fi
 The second task is to implement the real-time graphics and user interaction.
 The user controls the game with the arrow keys.
 aim the ball left aim the ball right aim the ball up aim the ball down Z or spacebar key – shoot the ball to the back wall.
+![Figure 1](https://drive.google.com/open?id=0B7qZTw4UObyPeTVYV1RHTnBJRzA)
+
+
+

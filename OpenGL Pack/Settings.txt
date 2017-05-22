@@ -1,0 +1,20 @@
+Keep the unziped Freeglut folder in your hard disk.
+The configure the settings as below.
+Then use the basecode to test (replace the code in the application's default file with the base code).
+
+
+1. Project properties > C\C++ > General > Additional include dependancies
+	Add folder - Freeeglut\include\GL 
+
+2. Project properties > Linker > General > Additional Library Directories
+	Add folder - Freeglut\lib 
+
+3. Project properties > Linker > Input> Aditional dependancies (Copy and paste the lines below)
+	opengl32.lib
+	freeglut.lib
+
+4. Copy file freeglut\bin\freeglut.dll to the folder -  <solution folder>\debug
+	
+
+
+	

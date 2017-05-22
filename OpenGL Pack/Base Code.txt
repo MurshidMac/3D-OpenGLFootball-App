@@ -1,0 +1,37 @@
+#include "stdafx.h"
+#include "freeglut.h"
+#include <Windows.h>
+#include <iostream>
+
+using namespace std;
+
+void reshape(int w, int h)
+{
+	glViewport(0, 0, w, h);
+}
+
+void display()
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glutSwapBuffers();
+}
+
+
+
+int main(int argc, char* argv[]) {
+
+	// Initialize GLUT
+	glutInit(&argc, argv);
+	// Set up some memory buffers for our display
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+	// Set the window size
+	glutInitWindowSize(800, 600);
+	// Create the window with the title "Hello,GL"
+	glutCreateWindow("Hello, GL");
+	// Bind the two functions (above) to respond when necessary
+	glutReshapeFunc(reshape);
+	glutDisplayFunc(display);
+
+	glutMainLoop();
+	return 0;
+}

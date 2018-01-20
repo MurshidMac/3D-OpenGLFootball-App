@@ -200,13 +200,13 @@ void keyboard(unsigned char key, int x, int y) {
 		break;
 	case ' ':
 		// Space Funtion 
-		tetaAngle = (M_PI / 2) - atan2(85.0f, ((horizontal / (30.0f / 38.0f)) - 76));
+		tetaAngle = ((22/7) / 2) - atan2(85.0f, ((horizontal / (30.0f / 38.0f)) - 76));
 		piAngle = atan2(-((660 - vertical) / (-60.0f / 29.0f)), 85.0f);
 		playBool = true;
 		break;
 	case'z':
 		// Z Funtion Same as the Space Funtion
-		tetaAngle = (M_PI / 2) - atan2(85.0f, ((horizontal / (30.0f / 38.0f)) - 76));
+		tetaAngle = ((22 / 7) / 2) - atan2(85.0f, ((horizontal / (30.0f / 38.0f)) - 76));
 		piAngle = atan2(-((660 - vertical) / (-60.0f / 29.0f)), 85.0f);
 		playBool = true;
 		break;

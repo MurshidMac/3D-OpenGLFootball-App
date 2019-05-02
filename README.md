@@ -1,4 +1,6 @@
 # 3D-OpenGLFootball-App
+Before you start. Please read this [article](https://medium.com/@murshidhassen/lets-learn-open-gl-78cf24bdf60b) on setting up your enviroment. This project requires visual studio 2013 or later.
+
 I have created a simple 3D football game using the perspective view with the help of a free non-proprietory OpenGL Library called [Freeglut](http://freeglut.sourceforge.net/docs/install.php), it has similar function calls and many features to that of OpenGL.
 The game takes place in a walled garden (see figure 1). The first task is to set up the static scene. 
 This consists of three textured 2 planes (for the walls), a plane for the grass surface, 
